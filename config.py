@@ -1,0 +1,2 @@
+#SAVE THE MODEL
+MODEL_CHECKPOINT_PATH="models/knn_model.pkl"
