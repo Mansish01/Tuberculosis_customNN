@@ -3,22 +3,6 @@ from torch.nn.functional import relu
 from torch.nn import Linear
 from torch import nn
 
-
-class FirstNeural(torch.nn.Module):
-    '''
-    subclassing torch.nn.module gives us automatic
-    gradient calcualtion'''
-    def __init__ (self, img_size : int, num_channels:int, num_labels : int):
-        super().__init__()
-        self.fc1 = Linear(img_size* img_size*num_channels, 256)
-        self.fc2 = Linear(256 , 128)
-        self.fc3 = Linear(128, num_labels)
-        
-    
-    def forward(self, X: torch.Tensor):
-        X =X.reshape(X.shape[0],-1)
-        #X= X.flatten()
-        return self.fc3(relu(self.fc2(relu(self.fc1.__call__(X)))))
         
 class Model(nn.Module):
     def __init__(self, img_size : int, num_channels:int, num_labels : int):
