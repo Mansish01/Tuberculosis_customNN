@@ -1,5 +1,5 @@
 import torch
-from models.customNN import FirstNeural, Model
+from models.customNN import Model
 from sklearn.metrics import accuracy_score,classification_report, confusion_matrix, ConfusionMatrixDisplay, precision_score, recall_score, f1_score, cohen_kappa_score
 from datasets.image_dataset import ImageDataset
 from torch.utils.data import DataLoader
