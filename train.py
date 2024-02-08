@@ -13,7 +13,7 @@ from uuid import uuid4
 import os 
 from datetime import datetime 
 from torch.utils.tensorboard import SummaryWriter
-
+from tqdm import tqdm 
 #3. Training 
 
 if  __name__ == "__main__":
@@ -30,7 +30,7 @@ if  __name__ == "__main__":
     
     writer = SummaryWriter(log_dir = f"artifacts/{folder_name}/tensorboard_logs")
     
-    BATCH_SIZE = 5
+    BATCH_SIZE = 10
     train_csv_path = r"data/train.csv"
     val_csv_path = r"data/test.csv"
     
@@ -95,7 +95,7 @@ if  __name__ == "__main__":
     avg_acc_next= 0
     MIN_EPOCHS = 6
 
-    for epoch in range(EPOCHS):
+    for epoch in tqdm(range(EPOCHS)):
         train_running_loss  = 0
         val_running_loss = 0
         train_running_accuracy = 0
@@ -103,7 +103,7 @@ if  __name__ == "__main__":
         train_running_accuracy = 0
         
         model.train()   #change into training mode
-        for images , labels in train_data_loader:
+        for images , labels in tqdm(train_data_loader):
             optimizer.zero_grad()
             model_out = model(images)
             model_out = F.log_softmax(model_out , dim =1)
@@ -114,20 +114,20 @@ if  __name__ == "__main__":
             # print("loss",loss)
             # values, indices = torch.max(model_out, dim =1)
         
-        for images , labels in train_data_loader:
+        # for images , labels in train_data_loader:
             
-            model_out = model(images)
-            model_out = F.log_softmax(model_out , dim =1)
-            loss = criterion(model_out, labels)
-            train_running_loss += loss.item()* images.size(0)
+        #     model_out = model(images)
+        #     model_out = F.log_softmax(model_out , dim =1)
+        #     loss = criterion(model_out, labels)
+        #     train_running_loss += loss.item()* images.size(0)
            
-            #find acuracy           
-            preds = torch.argmax(model_out, dim=1)
-            acc = (preds== labels).float().mean()
-            train_running_accuracy += acc.item() 
+        #     #find acuracy           
+        #     preds = torch.argmax(model_out, dim=1)
+        #     acc = (preds== labels).float().mean()
+        #     train_running_accuracy += acc.item() 
               
         model.eval()  #change into validation mode
-        for images , labels in val_data_loader:
+        for images , labels in tqdm(val_data_loader):
            
             model_out = model(images)
            

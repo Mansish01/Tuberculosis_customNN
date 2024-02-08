@@ -3,12 +3,12 @@ import requests
 from PIL import Image
 from torchvision import transforms as T
 import gradio as gr
-from models.customNN import FirstNeural, Model
+from models.customNN import Model
 
 # model = torch.load(r'artifacts\run-2023-11-29-15-18-18\ckpt-FirstNeural-val=0.696-epoch=1')
 # model.eval()
 # model_path = r"artifacts/run-2023-12-21-16-32-32/ckpt-Model-val=0.962-epoch=6"
-model_path = r"artifacts/run-2023-12-21-17-00-56/ckpt-Model-val=0.970-epoch=18"
+model_path = r"artifacts/best_model.pth"
 checkpoint = torch.load(model_path)
 
 model_state_dict  = checkpoint['model_state_dict']
