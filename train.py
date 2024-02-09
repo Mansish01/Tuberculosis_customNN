@@ -76,7 +76,7 @@ if  __name__ == "__main__":
     weight_normal = total_tuberculosis / (total_normal + total_tuberculosis)
     weight_tuberculosis = total_normal / (total_normal + total_tuberculosis)
 
-    class_weights = torch.tensor([weight_normal, weight_tuberculosis])
+    class_weights = torch.tensor([weight_normal, weight_tuberculosis]).to(device)
 
 # Use negative log likelihood loss with class weights
     criterion = nn.NLLLoss(weight=class_weights)
