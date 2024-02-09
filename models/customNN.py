@@ -7,7 +7,7 @@ class Model(nn.Module):
     def __init__(self, img_size : int, num_channels:int, num_labels : int):
         
         super(Model, self).__init__()
-        self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1)
+        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
         self.conv2 = nn.Conv2d(32, 32, kernel_size=3, padding=1)
         self.conv3 = nn.Conv2d(32, 32, kernel_size=3, padding=1)
         self.conv4 = nn.Conv2d(32, 32, kernel_size=3, padding=1)
