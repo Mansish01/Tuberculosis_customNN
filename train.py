@@ -80,7 +80,7 @@ if  __name__ == "__main__":
 
 # Use negative log likelihood loss with class weights
     criterion = nn.NLLLoss(weight=class_weights)
-    LR= 0.001
+    LR= 0.01
     EPOCHS = 20
     # criterion = nn.NLLLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr = LR)
