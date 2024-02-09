@@ -31,7 +31,7 @@ if  __name__ == "__main__":
     
     writer = SummaryWriter(log_dir = f"artifacts/{folder_name}/tensorboard_logs")
     
-    BATCH_SIZE = 20
+    BATCH_SIZE = 10
     train_csv_path = os.path.join("data", "train.csv")
     val_csv_path =os.path.join("data", "test.csv")
     transforms= T.Compose([
@@ -81,7 +81,7 @@ if  __name__ == "__main__":
 # Use negative log likelihood loss with class weights
     criterion = nn.NLLLoss(weight=class_weights)
     LR= 0.001
-    EPOCHS = 20
+    EPOCHS = 10
     # criterion = nn.NLLLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr = LR)
     epochwise_train_losses = []
