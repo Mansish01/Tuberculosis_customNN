@@ -20,6 +20,7 @@ if  __name__ == "__main__":
     SEED = 42
     torch.manual_seed(SEED)
     
+    device = torch.device('cuda')
     dt= datetime.now()
     
     format_dt = dt.strftime("%Y-%m-%d-%H-%M-%S")
@@ -31,9 +32,8 @@ if  __name__ == "__main__":
     writer = SummaryWriter(log_dir = f"artifacts/{folder_name}/tensorboard_logs")
     
     BATCH_SIZE = 10
-    train_csv_path = r"data/train.csv"
-    val_csv_path = r"data/test.csv"
-    
+    train_csv_path = os.path.join("data", "train.csv")
+    val_csv_path =os.path.join("data", "test.csv")
     transforms= T.Compose([
         T.Resize((256, 256)), 
         T.ToTensor(),
@@ -59,7 +59,7 @@ if  __name__ == "__main__":
     # print(next(iter(val_data_loader)))
     x , y= next(iter(train_data_loader))
   
-    model= Model(img_size= 256, num_channels = 3,  num_labels=2)
+    model= Model(img_size= 256, num_channels = 3,  num_labels=2).to(device)
     
 
     
@@ -76,7 +76,7 @@ if  __name__ == "__main__":
     weight_normal = total_tuberculosis / (total_normal + total_tuberculosis)
     weight_tuberculosis = total_normal / (total_normal + total_tuberculosis)
 
-    class_weights = torch.tensor([weight_normal, weight_tuberculosis])
+    class_weights = torch.tensor([weight_normal, weight_tuberculosis]).to(device)
 
 # Use negative log likelihood loss with class weights
     criterion = nn.NLLLoss(weight=class_weights)
@@ -103,7 +103,8 @@ if  __name__ == "__main__":
         train_running_accuracy = 0
         
         model.train()   #change into training mode
-        for images , labels in tqdm(train_data_loader):
+        for images , labels in train_data_loader:
+            images, labels = images.to(device), labels.to(device)
             optimizer.zero_grad()
             model_out = model(images)
             model_out = F.log_softmax(model_out , dim =1)
@@ -115,20 +116,20 @@ if  __name__ == "__main__":
             # values, indices = torch.max(model_out, dim =1)
         
         # for images , labels in train_data_loader:
-            
+            # images, labels = images.to(device), labels.to(device)
         #     model_out = model(images)
         #     model_out = F.log_softmax(model_out , dim =1)
         #     loss = criterion(model_out, labels)
         #     train_running_loss += loss.item()* images.size(0)
            
-        #     #find acuracy           
-        #     preds = torch.argmax(model_out, dim=1)
-        #     acc = (preds== labels).float().mean()
-        #     train_running_accuracy += acc.item() 
+            #find acuracy           
+            preds = torch.argmax(model_out, dim=1)
+            acc = (preds== labels).float().mean()
+            train_running_accuracy += acc.item() 
               
         model.eval()  #change into validation mode
-        for images , labels in tqdm(val_data_loader):
-           
+        for images , labels in val_data_loader:
+            images, labels = images.to(device), labels.to(device)
             model_out = model(images)
            
             model_out = F.log_softmax(model_out , dim =1)
