@@ -32,9 +32,8 @@ if  __name__ == "__main__":
     writer = SummaryWriter(log_dir = f"artifacts/{folder_name}/tensorboard_logs")
     
     BATCH_SIZE = 10
-    train_csv_path = r"data/train.csv"
-    val_csv_path = r"data/test.csv"
-    
+    train_csv_path = os.path.join("data", "train.csv")
+    val_csv_path =os.path.join("data", "test.csv")
     transforms= T.Compose([
         T.Resize((256, 256)), 
         T.ToTensor(),
