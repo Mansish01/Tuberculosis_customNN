@@ -68,21 +68,21 @@ if  __name__ == "__main__":
     
     # class_weights = totao_n_samples/(no_classes * no_class_sample)
     total_normal = 3500
-    total_tuberculosis = 700
+    total_tuberculosis = 1400
     no_classes = 2
     # weight_normal = (total_normal + total_tuberculosis)/(no_classes *  total_normal)
     # weight_tuberculosis = (total_normal + total_tuberculosis)/(no_classes * total_tuberculosis)
 
-    weight_normal = total_tuberculosis / (total_normal + total_tuberculosis)
-    weight_tuberculosis = total_normal / (total_normal + total_tuberculosis)
+    #weight_normal = total_tuberculosis / (total_normal + total_tuberculosis)
+    #weight_tuberculosis = total_normal / (total_normal + total_tuberculosis)
 
-    class_weights = torch.tensor([weight_normal, weight_tuberculosis]).to(device)
+    #class_weights = torch.tensor([weight_normal, weight_tuberculosis]).to(device)
 
 # Use negative log likelihood loss with class weights
-    criterion = nn.NLLLoss(weight=class_weights)
+    #criterion = nn.NLLLoss(weight=class_weights)
     LR= 0.001
     EPOCHS = 10
-    # criterion = nn.NLLLoss()
+    criterion = nn.NLLLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr = LR)
     epochwise_train_losses = []
     epochwise_val_losses = []
