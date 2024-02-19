@@ -8,7 +8,9 @@ from models.customNN import Model
 # model = torch.load(r'artifacts\run-2023-11-29-15-18-18\ckpt-FirstNeural-val=0.696-epoch=1')
 # model.eval()
 # model_path = r"artifacts/run-2023-12-21-16-32-32/ckpt-Model-val=0.962-epoch=6"
-model_path = r"artifacts/best_model.pth"
+# model_path = r"artifacts/run-2024-02-18-00-21-29/ckpt-Model-val=0.951-epoch=8"
+model_path = r"artifacts/run-2024-02-19-00-42-42/ckpt-Model-val=0.936-epoch=5"
+
 checkpoint = torch.load(model_path)
 
 model_state_dict  = checkpoint['model_state_dict']

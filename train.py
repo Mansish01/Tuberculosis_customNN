@@ -7,6 +7,7 @@ from datasets.image_dataset import ImageDataset
 from torchvision import transforms as T     
 from torch.utils.data import DataLoader
 from models.customNN import Model
+# from models.customNN import SophisticatedModel
 import matplotlib.pyplot as plt  
 from torchvision.transforms import Normalize
 from uuid import uuid4
@@ -20,7 +21,9 @@ if  __name__ == "__main__":
     SEED = 42
     torch.manual_seed(SEED)
     
-    device = torch.device('cuda')
+
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     dt= datetime.now()
     
     format_dt = dt.strftime("%Y-%m-%d-%H-%M-%S")
@@ -31,7 +34,8 @@ if  __name__ == "__main__":
     
     writer = SummaryWriter(log_dir = f"artifacts/{folder_name}/tensorboard_logs")
     
-    BATCH_SIZE = 10
+    BATCH_SIZE = 16
+
     train_csv_path = os.path.join("data", "train.csv")
     val_csv_path =os.path.join("data", "test.csv")
     transforms= T.Compose([
@@ -66,23 +70,21 @@ if  __name__ == "__main__":
     
     #3. Train
     
-    # class_weights = totao_n_samples/(no_classes * no_class_sample)
-    total_normal = 3500
-    total_tuberculosis = 1400
+    total_normal = 1506
+    total_tuberculosis = 700
     no_classes = 2
-    # weight_normal = (total_normal + total_tuberculosis)/(no_classes *  total_normal)
-    # weight_tuberculosis = (total_normal + total_tuberculosis)/(no_classes * total_tuberculosis)
+    weight_normal = (total_normal + total_tuberculosis)/(no_classes *  total_normal)
+    weight_tuberculosis = (total_normal + total_tuberculosis)/(no_classes * total_tuberculosis)
 
-    #weight_normal = total_tuberculosis / (total_normal + total_tuberculosis)
-    #weight_tuberculosis = total_normal / (total_normal + total_tuberculosis)
+    class_weights = torch.tensor([1.2, 0.8]).to(device)
 
-    #class_weights = torch.tensor([weight_normal, weight_tuberculosis]).to(device)
 
-# Use negative log likelihood loss with class weights
-    #criterion = nn.NLLLoss(weight=class_weights)
+    criterion = nn.NLLLoss(weight=class_weights)
+    # criterion = nn.NLLLoss()
+
     LR= 0.001
-    EPOCHS = 10
-    criterion = nn.NLLLoss()
+    EPOCHS = 25
+
     optimizer = torch.optim.Adam(model.parameters(), lr = LR)
     epochwise_train_losses = []
     epochwise_val_losses = []
@@ -90,7 +92,7 @@ if  __name__ == "__main__":
     epochwise_train_acc= []
 
     best_val_accuracy = 0
-    limit = 0.01
+    limit = 0.001
     avg_acc = 0
     avg_acc_next= 0
     MIN_EPOCHS = 6
@@ -112,15 +114,7 @@ if  __name__ == "__main__":
             train_running_loss += loss.item()* images.size(0)
             loss.backward()
             optimizer.step()
-            # print("loss",loss)
-            # values, indices = torch.max(model_out, dim =1)
-        
-        # for images , labels in train_data_loader:
-            # images, labels = images.to(device), labels.to(device)
-        #     model_out = model(images)
-        #     model_out = F.log_softmax(model_out , dim =1)
-        #     loss = criterion(model_out, labels)
-        #     train_running_loss += loss.item()* images.size(0)
+
            
             #find acuracy           
             preds = torch.argmax(model_out, dim=1)
@@ -211,29 +205,25 @@ if  __name__ == "__main__":
         torch.save(checkpoint ,  checkpoint_name)
     
     print(f" the best val acc is {best_val_accuracy} from epoch {epoch_no}")
-                
-    #save the model
 
-    # torch.save(model, "artifacts/first_model.pth")
 
     fig,(ax1, ax2) = plt.subplots(1, 2, figsize=(20, 10))
 
     x_axis_values = np.arange(0, EPOCHS, 1)
 
     ax1.plot(epochwise_train_losses , label= "train loss")
-    ax1.plot(epochwise_val_losses , label="val loss")
+    ax1.plot(epochwise_val_losses , label="test loss")
     ax1.set_title("train vs validation loss")
     ax1.legend()
 
     ax2.plot(epochwise_train_acc , label= "train accuracy")
-    ax2.plot(epochwise_val_acc , label="val accuracy")
+    ax2.plot(epochwise_val_acc , label="test accuracy")
     ax2.set_title("train vs validation accuracy")
     ax2.legend()
     plt.show()
 
 
-    # print(epochwise_train_losses)
-    # print(epochwise_val_loss)
+
         
         
         

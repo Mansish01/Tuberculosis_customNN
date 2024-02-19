@@ -1,10 +1,11 @@
 
 venv
 # models
-
+Normal12
 data
 
 # models
+
 
 models/*.pkl
 artifacts

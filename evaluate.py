@@ -27,7 +27,7 @@ val_data_loader= DataLoader(
         shuffle = True
     )
 
-model_path = r"artifacts/run-2023-12-21-17-00-56/ckpt-Model-val=0.970-epoch=18"
+model_path = r"artifacts/run-2024-02-19-00-42-42/ckpt-Model-val=0.936-epoch=5"
 checkpoint = torch.load(model_path)
 
 model_state_dict  = checkpoint['model_state_dict']
