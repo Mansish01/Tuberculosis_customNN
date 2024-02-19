@@ -1,16 +1,16 @@
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 
 from torch import nn 
 # from models.customNN import FirstNeural
 from io1 import read_as_csv
-from util.pre_processing import label_to_index, image_transforms
+from util.pre_processing import label_to_index
 import numpy as np
 from torch import nn
 
 # from models.customNN import FirstNeural
 from io1 import read_as_csv
-from util.pre_processing import label_to_index, image_transforms, read_image
+from util.pre_processing import label_to_index
 import numpy as np
 from os.path import join
 from PIL import Image
