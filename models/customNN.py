@@ -11,13 +11,13 @@ class Model(nn.Module):
         self.conv =nn.Conv2d(3,3, kernel_size=3 , padding=1)
         self.max_pool = nn.MaxPool2d(kernel_size=2)
         self.conv_1= nn.Conv2d(3,1, kernel_size=3 , padding=1)
-        
         self.Linear = nn.Linear(1*32*32 , 2)   
 
 
     def forward(self, x):
          x = self.conv(x)
          x= self.max_pool(x)
+         
          x = self.conv(x)
          x = self.max_pool(x)
          
@@ -88,4 +88,47 @@ class SophisticatedModel(nn.Module):
          
        
 
-                                                                                
+IMAGE_INPUT_CHANNEL = 'RGB'
+KERNEL_SIZE = 3
+POOL_KERNEL_SIZE = 2
+
+class TuberculosisCNNReduced(nn.Module):
+    def __init__(self):
+        super(TuberculosisCNNReduced, self).__init__()
+        # Define a simplified CNN architecture with 10 layers in total
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 32, kernel_size=KERNEL_SIZE, stride=1, padding=1),
+            nn.BatchNorm2d(32),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=POOL_KERNEL_SIZE, stride=2),  # Layer 1
+
+            nn.Conv2d(32, 64, kernel_size=KERNEL_SIZE, stride=1, padding=1),
+            nn.BatchNorm2d(64),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=POOL_KERNEL_SIZE, stride=2),  # Layer 2
+
+            nn.Conv2d(64, 128, kernel_size=KERNEL_SIZE, stride=1, padding=1),
+            nn.BatchNorm2d(128),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=POOL_KERNEL_SIZE, stride=2),  # Layer 3
+
+            nn.Conv2d(128, 256, kernel_size=KERNEL_SIZE, stride=1, padding=1),
+            nn.BatchNorm2d(256),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=POOL_KERNEL_SIZE, stride=2),  # Layer 4
+        )
+
+        self.classifier = nn.Sequential(
+            nn.Linear(256 * (256 // (2 ** 4)) * (256 // (2 ** 4)), 1024),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.5),  # Layer 5
+            nn.Linear(1024, 256),
+            nn.ReLU(inplace=True),  # Layer 6
+            nn.Linear(256, 2),  # Layer 7
+        )
+
+    def forward(self, x):
+        x = self.features(x)  # Pass input through feature extractor
+        x = torch.flatten(x, 1)  # Flatten the features for the classifier
+        x = self.classifier(x)  # Pass through the classifier
+        return x                                                                                
