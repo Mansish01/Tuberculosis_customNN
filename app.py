@@ -76,6 +76,8 @@ gr.Interface(fn=predict,
 
 
 
+
+
   #   # Finding top classes and their confidences
     # sorted_confidences = sorted(confidences.items(), key=lambda x: x[1], reverse=True)
     # top_classes = sorted_confidences[:4]

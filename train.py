@@ -35,9 +35,9 @@ if  __name__ == "__main__":
     writer = SummaryWriter(log_dir = f"artifacts/{folder_name}/tensorboard_logs")
     
     BATCH_SIZE = 16
-
+    # difference= 0.5
     train_csv_path = os.path.join("data", "train.csv")
-    val_csv_path =os.path.join("data", "test.csv")
+    val_csv_path =os.path.join("data", "validation.csv")
     transforms= T.Compose([
         T.Resize((256, 256)), 
         T.ToTensor(),
@@ -70,17 +70,19 @@ if  __name__ == "__main__":
     
     #3. Train
     
-    total_normal = 1506
+    total_normal = 3500
     total_tuberculosis = 700
     no_classes = 2
     weight_normal = (total_normal + total_tuberculosis)/(no_classes *  total_normal)
     weight_tuberculosis = (total_normal + total_tuberculosis)/(no_classes * total_tuberculosis)
 
-    class_weights = torch.tensor([1.2, 0.8]).to(device)
+    class_weights = torch.tensor([2, 0.8]).to(device)
+    # class_weights = torch.tensor([weight_tuberculosis, weight_normal]).to(device)
 
 
-    criterion = nn.NLLLoss(weight=class_weights)
-    # criterion = nn.NLLLoss()
+
+    # criterion = nn.NLLLoss(weight=class_weights)
+    criterion = nn.NLLLoss()
 
     LR= 0.001
     EPOCHS = 25
@@ -92,7 +94,7 @@ if  __name__ == "__main__":
     epochwise_train_acc= []
 
     best_val_accuracy = 0
-    limit = 0.001
+    limit = 0.3
     avg_acc = 0
     avg_acc_next= 0
     MIN_EPOCHS = 6
@@ -185,7 +187,7 @@ if  __name__ == "__main__":
         #     if( difference <= limit):
         #         print("the last epoch was", epoch)
         #         break
-        
+
         
        
         print(f"epoch {epoch} train loss: {avg_train_loss:.3f} \t val loss : {avg_val_loss:.3f} \t train accuracy : {avg_train_acc:.3f} \t val accuracy : {avg_val_acc:.3f}")
@@ -212,12 +214,12 @@ if  __name__ == "__main__":
     x_axis_values = np.arange(0, EPOCHS, 1)
 
     ax1.plot(epochwise_train_losses , label= "train loss")
-    ax1.plot(epochwise_val_losses , label="test loss")
+    ax1.plot(epochwise_val_losses , label="validation loss")
     ax1.set_title("train vs validation loss")
     ax1.legend()
 
     ax2.plot(epochwise_train_acc , label= "train accuracy")
-    ax2.plot(epochwise_val_acc , label="test accuracy")
+    ax2.plot(epochwise_val_acc , label="validation accuracy")
     ax2.set_title("train vs validation accuracy")
     ax2.legend()
     plt.show()
