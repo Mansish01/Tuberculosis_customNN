@@ -93,7 +93,7 @@ KERNEL_SIZE = 3
 POOL_KERNEL_SIZE = 2
 
 class TuberculosisCNNReduced(nn.Module):
-    def __init__(self):
+    def __init__(self, img_size : int, num_channels:int, num_labels : int):
         super(TuberculosisCNNReduced, self).__init__()
         # Define a simplified CNN architecture with 10 layers in total
         self.features = nn.Sequential(

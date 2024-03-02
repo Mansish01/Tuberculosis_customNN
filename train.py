@@ -6,7 +6,9 @@ import torch.nn.functional as F
 from datasets.image_dataset import ImageDataset
 from torchvision import transforms as T     
 from torch.utils.data import DataLoader
-from models.customNN import Model
+# from models.customNN import Model
+from models.customNN import TuberculosisCNNReduced
+
 # from models.customNN import SophisticatedModel
 import matplotlib.pyplot as plt  
 from torchvision.transforms import Normalize
@@ -63,7 +65,7 @@ if  __name__ == "__main__":
     # print(next(iter(val_data_loader)))
     x , y= next(iter(train_data_loader))
   
-    model= Model(img_size= 256, num_channels = 3,  num_labels=2).to(device)
+    model= TuberculosisCNNReduced(img_size= 256, num_channels = 3,  num_labels=2).to(device)
     
 
     
