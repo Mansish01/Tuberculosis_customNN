@@ -131,4 +131,5 @@ class TuberculosisCNNReduced(nn.Module):
         x = self.features(x)  # Pass input through feature extractor
         x = torch.flatten(x, 1)  # Flatten the features for the classifier
         x = self.classifier(x)  # Pass through the classifier
-        return x                                                                                
+        return x  
+                                                                              
